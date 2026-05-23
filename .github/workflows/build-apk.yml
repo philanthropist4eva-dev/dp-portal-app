@@ -12,10 +12,10 @@ jobs:
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@b4ffde65f46336ab88eb57c8f5f93a936bae11
+        uses: actions/checkout@8f323f6e9d0ad8f6521eae4d400ce3a9cd27ce37
 
       - name: Set up Java 17
-        uses: actions/setup-java@387ac29b308b003ca37ba93a6cab5eb57c8f5f93
+        uses: actions/setup-java@6a0805fcefea3d4657a47ac4c165951e33482018
         with:
           java-version: '17'
           distribution: 'temurin'
@@ -25,5 +25,4 @@ jobs:
         run: |
           chmod +x ./gradlew
           ./gradlew assembleDebug
-          echo "Build completed successfully!"
-          ls -lah app/build/outputs/apk/debug/
+          echo "APK built successfully at: app/build/outputs/apk/debug/app-debug.apk"
