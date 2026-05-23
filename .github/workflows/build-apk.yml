@@ -2,23 +2,60 @@ name: Build APK and AAB
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - name: Checkout code
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
+
+      - name: Set up Java
+        uses: actions/setup-java@5ffc8fb403a63f38e3ac2b402f2780061593e1d5
         with:
           java-version: '17'
           distribution: 'temurin'
           cache: gradle
-      - run: chmod +x ./gradlew
-      - run: ./gradlew assembleDebug
-      - uses: actions/upload-artifact@v3
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Build Debug APK
+        run: ./gradlew assembleDebug
+
+      - name: Build Release APK
+        run: ./gradlew assembleRelease
+        continue-on-error: true
+
+      - name: Build Release AAB
+        run: ./gradlew bundleRelease
+        continue-on-error: true
+
+      - name: Upload Debug APK
+        uses: actions/upload-artifact@6673cd052c4cd6fcf4f4dbe3e288f02e94f37e13
         with:
           name: debug-apk
           path: app/build/outputs/apk/debug/app-debug.apk
           retention-days: 30
+
+      - name: Upload Release APK
+        uses: actions/upload-artifact@6673cd052c4cd6fcf4f4dbe3e288f02e94f37e13
+        if: always()
+        with:
+          name: release-apk
+          path: app/build/outputs/apk/release/app-release.apk
+          retention-days: 30
+        continue-on-error: true
+
+      - name: Upload Release AAB
+        uses: actions/upload-artifact@6673cd052c4cd6fcf4f4dbe3e288f02e94f37e13
+        if: always()
+        with:
+          name: release-aab
+          path: app/build/outputs/bundle/release/app-release.aab
+          retention-days: 30
+        continue-on-error: true
