@@ -1,5 +1,4 @@
 # Gradle files
-.gradle/
 build/
 *.apk
 *.aab
