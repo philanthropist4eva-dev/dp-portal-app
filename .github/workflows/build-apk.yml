@@ -12,7 +12,7 @@ jobs:
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+        uses: actions/checkout@b4ffde65f46336ab88eb57c8f5f93a936bae11
 
       - name: Set up Java 17
         uses: actions/setup-java@387ac29b308b003ca37ba93a6cab5eb57c8f5f93
@@ -21,15 +21,9 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
-      - name: Make gradlew executable
-        run: chmod +x ./gradlew
-
       - name: Build Debug APK
-        run: ./gradlew assembleDebug
-
-      - name: Upload Debug APK
-        uses: actions/upload-artifact@6546c4e1ee4e5f4f9b7e5b5b5b5b5b5b5b5b5b5
-        with:
-          name: debug-apk
-          path: app/build/outputs/apk/debug/app-debug.apk
-          retention-days: 30
+        run: |
+          chmod +x ./gradlew
+          ./gradlew assembleDebug
+          echo "Build completed successfully!"
+          ls -lah app/build/outputs/apk/debug/
